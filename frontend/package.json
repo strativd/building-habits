@@ -6,7 +6,7 @@
   "author": "ztratify",
   "license": "MIT",
   "private": true,
-  "repository": "https://github.com/ztratify/habits-js",
+  "repository": "https://github.com/ztratify/building-habits",
   "scripts": {
     "dev": "next -p 1234",
     "build": "next build",

@@ -6,6 +6,7 @@
   "author": "ztratify",
   "license": "MIT",
   "private": true,
+  "repository": "https://github.com/ztratify/building-habits",
   "scripts": {
     "dev": "keystone-next",
     "seed-data": "keystone-next --seed-data"
@@ -74,6 +75,5 @@
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "repository": "https://github.com/ztratify/habits-js"
+  }
 }

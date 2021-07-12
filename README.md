@@ -1,45 +1,32 @@
 <div align="center">
-  <img title="haBits logo" alt="haBits logo" width="140px" src="/lib/assets/images/habits_medium.png">
+  <img title="haBits logo" alt="haBits logo" width="140px" src="/frontend/public/static/habits_medium.png">
 </div>
 <div align="center">
-  <img title="React.js" alt="React logo" width="60px" src="/lib/assets/images/logo_react.webp">
-  <img title="Ruby On Rails" alt="Roby On Rails logo" width="120px" src="/lib/assets/images/logo_rails.png">
-  <img title="GraphQL" alt="GraphQL logo" width="60px" src="/lib/assets/images/logo_graphql.png">
+  <img title="React.js" alt="React logo" width="60px" src="/assets/logo_react.webp">
+  <img title="GraphQL" alt="GraphQL logo" width="60px" src="/assets/logo_graphql.png">
 </div>
 
 # ✅ haBits — building habits, bit by bit.
 
-A personal web project to practice React, GraphQL, Ruby on Rails, and good habits...
+A personal web project to practice React + Next.js + GraphQL + Keystone JS, and good habits...
 
-<img alt="haBits habit tracking screenshot" width="100%" src="/lib/assets/images/habits_tracker_screenshot.png">
+<img alt="haBits habit tracking screenshot" width="100%" src="/assets/habits_tracker_screenshot.png">
 
 ## Getting started
 
-`$ git clone https://github.com/ztratify/habits` (or similar) to clone the repo locally
+`$ git clone https://github.com/ztratify/building-habits.git` (or similar) to clone the repo locally
 
-`$ cd habits` to open the project
+`$ cd building-habits` to open the repo once it's downloaded
 
-`$ bundle install` to download ruby gems
+`$ npm install` **in both** the `/frontend` and `/backend` folders to install dependencies
 
-> **Errors?** Make sure you [install Ruby on Rails first...](https://gorails.com/setup)
-> 
-> `ruby` '2.6.3'
-> 
-> `rails` '6.0.3'
+`$ npm run dev` **in both** the `/frontend` and `/backend` folders to run each of them locally
 
-`$ yarn install` to download node dependencies
+View frontend (React + Next.js): [http://localhost:1234](http://localhost:1234)
 
-`$ rails db:create && rails db:migrate && rails db:seed` to build a local database and seed it with data
+View Backend (Keystone JS): [http://localhost:3000](http://localhost:3000)
 
-> **Errors?** Make sure you [install MySQL database first...](https://gist.github.com/operatino/392614486ce4421063b9dece4dfe6c21)
-> 
-> `$ brew install mysql@5.7` and address any "Caveats" messages
-> 
-> `$ brew services start mysql@5.7` to run mysql locally
-
-`$ rails s` to start the server and web app!
-
-Finally visit [http://localhost:3333](http://localhost:3333) to **start building habits!**
+*Start building habits!*
 
 ## GraphQL
 
@@ -174,29 +161,3 @@ mutation updateSteps {
   }
 }
 ```
-
-
-## TODO (update with):
-
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
