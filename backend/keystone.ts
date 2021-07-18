@@ -8,7 +8,7 @@ import {
 
 import { insertSeedData } from "./seed-data";
 
-import { User } from "./schemas/User";
+import { User, Habit, Progress } from "./schemas";
 
 const databaseURL =
   process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits-tutorial";
@@ -48,8 +48,9 @@ export default withAuth(
       },
     },
     lists: createSchema({
-      // Schema items go in here
       User,
+      Habit,
+      Progress,
     }),
     ui: {
       // Show the UI only for poeple who pass this test

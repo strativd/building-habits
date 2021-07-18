@@ -20,12 +20,9 @@ export const User = list({
     name: text({ isRequired: true }),
     email: text({ isRequired: true, isUnique: true }),
     password: password(),
-    // role: relationship({
-    //   ref: 'Role.assignedTo',
-    //   access: {
-    //     create: permissions.canManageUsers,
-    //     update: permissions.canManageUsers,
-    //   },
-    // }),
+    habits: relationship({
+      many: true,
+      ref: "Habit.owner",
+    }),
   },
 });
