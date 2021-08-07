@@ -16,4 +16,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
+  "files.exclude": {
+    "**/.next": true
+  }
 }
