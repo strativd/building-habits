@@ -15,9 +15,8 @@ import convertToSlug from "../lib/convertToSlug";
 export const Habit = list({
   ui: {
     listView: {
-      initialColumns: ["title", "iconEmoji", "goal", "frequency", "owner"],
+      initialColumns: ["title", "goal", "frequency", "owner"],
     },
-    labelField: "title",
   },
   fields: {
     title: text({ isRequired: true }),
@@ -31,9 +30,16 @@ export const Habit = list({
       defaultValue: "DAILY",
       isRequired: true,
     }),
-    iconEmoji: text({ defaultValue: "✅" }),
-    iconName: text({ defaultValue: "white check mark in green checkbox" }),
-    order: integer(),
+    order: integer({
+      /*
+      isRequired: true,
+      isUnique: true,
+      */
+    }),
+    emoji: relationship({
+      ref: "Emoji.habit",
+      many: false,
+    }),
     owner: relationship({
       ref: "User.habits",
       many: false,
@@ -55,13 +61,24 @@ export const Habit = list({
     }),
   },
   hooks: {
-    resolveInput: async ({ resolvedData, operation }) => {
-      // Generate Habit.slug when item is created
+    resolveInput: async ({ resolvedData, operation, context }) => {
       if (operation === "create") {
-        const slug = `${resolvedData.title}-${
-          resolvedData.frequency
-        }-${Date.now()}`;
-        resolvedData.slug = convertToSlug(slug);
+        // Generate Habit.slug when item is created
+        resolvedData.slug = convertToSlug(
+          `${resolvedData.title}-${resolvedData.frequency}-${Date.now()}`
+        );
+        // Generate new Habit.emoji if one isn't provided
+        if (!resolvedData.emoji) {
+          const emoji = await context.lists.Emoji.createOne({ data: {} });
+          resolvedData.emoji = emoji.id;
+        }
+        // Generate Habit order based on user's habit count
+        /* TODO: deleted habits are not accounted for...
+        const count = await context.lists.Habit.count({
+          where: { owner: { id: context.session.itemId } },
+        });
+        resolvedData.order = count + 1;
+        */
       }
       // We always return resolvedData from the resolveInput hook
       return resolvedData;
@@ -73,6 +90,19 @@ export const Habit = list({
       } else if (goal > 9) {
         addValidationError(`Goal must be less than 10`);
       }
+    },
+    afterDelete: async ({ context, existingItem }) => {
+      // Delete emoji from db
+      const emojiId = String(existingItem.emoji);
+      await context.lists.Emoji.deleteOne({ id: emojiId });
+      // Delete progress steps from db
+      const habitId = String(existingItem.id);
+      const progress = await context.lists.Progress.findMany({
+        where: { habitId },
+        resolveFields: "id",
+      });
+      const ids = progress.map((item) => item.id);
+      await context.lists.Progress.deleteMany({ ids });
     },
   },
 });
