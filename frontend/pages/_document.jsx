@@ -19,7 +19,7 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en-CA">
         <Head>
-          <></>
+          <link rel="shortcut icon" href="/static/habits_small.png" />
         </Head>
         <body>
           <Main />

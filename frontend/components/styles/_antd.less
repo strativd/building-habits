@@ -1,0 +1,19 @@
+// 1. Import Ant Design less files
+//
+// 2. Override default less values:
+//    https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
+//
+// 3. Run less locally to generate CSS file:
+//    $ lessc app/assets/stylesheets/_antd.less app/assets/stylesheets/antd.css --js
+//             ^ process this file with less...  ^ and output this file! 👌
+@import 'node_modules/antd/dist/antd.less';
+@import 'node_modules/antd/dist/antd.dark.less';
+@primary-color: #75B748; // primary color for all components
+@link-color: #75B748; // link color
+@success-color: #00B500; // success state color
+@warning-color: #FAAD14; // warning state color
+@error-color: #F5222D; // error state color
+@border-color-base: #544D48;
+@text-color: #ECEBE3;
+@text-color-dark: #272723;
+@font-size-base: 16px;

@@ -1,0 +1,109 @@
+// Layout
+
+#__next {
+  letter-spacing: 0.3px;
+}
+
+.ant-layout-header {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  box-shadow: 0px 0px 20px 10px #000;
+
+  .logo {
+    float: left;
+    width: 100px;
+    height: 100%;
+    text-align: center;
+
+    .logo__image {
+      width: auto;
+      height: 100%;
+      vertical-align: top;
+    }
+  }
+}
+
+button.ant-btn-sm {
+  height: 45px;
+  padding: 0 20px;
+}
+
+// Table => editable cells
+
+.row--editable {
+  .ant-form-item-explain {
+    position: absolute;
+    top: 100%;
+    font-size: 12px;
+  }
+
+  .anticon-close-circle {
+    display: none;
+  }
+
+  .ant-table-cell-fix-left {
+    cursor: pointer;
+  }
+}
+
+.row--editable__editing .anticon-close-circle,
+.row--editable:hover .anticon-close-circle {
+  display: inline-block;
+}
+
+// Table => checkbox cells
+
+label.ant-checkbox-wrapper {
+  margin-left: 8px;
+}
+
+.ant-table-cell.habit-delete-undo {
+  padding: 0;
+  text-align: center;
+  min-width: 30px;
+}
+
+// Table => emoji icons
+
+.ant-table-cell.habit-icon {
+  font-size: 22px;
+  height: 65px;
+  min-width: 65px;
+  line-height: 65px;
+  text-align: center;
+  padding: 0;
+}
+
+.ant-table-cell.habit-title {
+  padding-left: 0;
+
+  .habit-title--text {
+    border-bottom: 2px solid transparent;
+    margin: 0;
+  }
+
+  &:hover {
+    .habit-title--text {
+      border-bottom: 2px solid #a6d47b40;
+    }
+  }
+}
+
+// Action buttons
+
+button#action-button {
+  margin: 25px 16px;
+  height: 50px;
+}
+
+// Emoji Picker
+
+.ant-modal-body .emoji-mart {
+  background: none;
+  height: 400px;
+  font-family: inherit;
+  border: none;
+  margin: 0px auto;
+  width: 100% !important; // override inline style
+}
