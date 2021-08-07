@@ -2,6 +2,7 @@ import { BaseGeneratedListTypes, FieldConfig } from "@keystone-next/types";
 
 import { User } from "./User";
 import { Habit } from "./Habit";
+import { Emoji } from "./Emoji";
 import { Progress } from "./Progress";
 
 const readOnly: FieldConfig<BaseGeneratedListTypes> = {
@@ -17,4 +18,4 @@ const readOnly: FieldConfig<BaseGeneratedListTypes> = {
   },
 };
 
-export { User, Habit, Progress, readOnly };
+export { User, Habit, Emoji, Progress, readOnly };
