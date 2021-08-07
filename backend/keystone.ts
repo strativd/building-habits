@@ -7,8 +7,9 @@ import {
 } from "@keystone-next/keystone/session";
 
 import { insertSeedData } from "./seed-data";
+import { extendGraphqlSchema } from "./mutations";
 
-import { User, Habit, Progress } from "./schemas";
+import { User, Habit, Emoji, Progress } from "./schemas";
 
 const databaseURL =
   process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits-tutorial";
@@ -50,8 +51,10 @@ export default withAuth(
     lists: createSchema({
       User,
       Habit,
+      Emoji,
       Progress,
     }),
+    extendGraphqlSchema,
     ui: {
       // Show the UI only for poeple who pass this test
       isAccessAllowed: ({ session }) =>
