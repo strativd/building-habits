@@ -47,14 +47,13 @@
     "@keystone-next/fields": "^4.1.1",
     "@keystone-next/keystone": "^9.3.0",
     "@keystone-next/types": "^12.0.0",
-    "@keystonejs/server-side-graphql-client": "^1.1.2",
+    "@keystonejs/server-side-graphql-client": "^2.1.2",
     "@types/nodemailer": "^6.4.0",
     "dotenv": "^8.2.0",
     "next": "^10.0.5",
     "nodemailer": "^6.4.17",
     "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "stripe": "^8.130.0"
+    "react-dom": "^16.14.0"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.9.0",

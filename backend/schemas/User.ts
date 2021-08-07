@@ -24,5 +24,9 @@ export const User = list({
       many: true,
       ref: "Habit.owner",
     }),
+    progress: relationship({
+      many: true,
+      ref: "Progress.owner",
+    }),
   },
 });
