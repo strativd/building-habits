@@ -46,7 +46,7 @@
     "babel-eslint": "^10.1.0",
     "babel-jest": "^26.6.3",
     "casual": "^1.6.2",
-    "eslint": "^7.26.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-html": "^6.1.2",
@@ -58,21 +58,6 @@
     "jest": "^26.6.3",
     "prettier": "^2.3.0",
     "react-test-renderer": "^17.0.1"
-  },
-  "eslintConfig": {
-    "extends": [
-      "airbnb"
-    ],
-    "rules": {
-      "react/prop-types": 0,
-      "react/jsx-props-no-spreading": 0,
-      "no-unused-vars": [
-        "warn",
-        {
-          "argsIgnorePattern": "^_"
-        }
-      ]
-    }
   },
   "jest": {
     "setupFilesAfterEnv": [

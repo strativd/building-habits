@@ -1,0 +1,19 @@
+{
+  "env": {
+    "node": true
+  },
+  "extends": ["airbnb"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "react/prop-types": 0,
+    "react/jsx-props-no-spreading": 0,
+    "no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ]
+  }
+}
