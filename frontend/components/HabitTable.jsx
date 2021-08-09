@@ -1,47 +1,33 @@
 import React, { useState } from 'react';
 import { Table } from 'antd';
-import { useQuery } from '@apollo/client';
 
 import { useHabitEditor } from './useHabitEditor';
 import ActionButton from './ActionButton';
 import DestroyButton from './DestroyButton';
 import EditableCell from './EditableCell';
 import HabitBits from './HabitBits';
-import { ALL_HABITS } from './graphql';
 import { getDatesThisWeek } from '../lib';
 import EmojiPicker from './EmojiPicker';
+import useUser from '../lib/useUser';
 
 const datesThisWeek = getDatesThisWeek();
 
 const HabitTable = () => {
-  const [tableData, setTableData] = useState([]);
+  const user = useUser();
+  const { editing } = useHabitEditor();
 
-  const { editingHabit, editing } = useHabitEditor();
+  const userHabits = user?.habits?.map((habit) => {
+    const habitRecord = { ...habit };
 
-  const [editRow, setEditRow] = useState({});
-  const [preEdit, setPreEdit] = useState({});
-
-  const queryHabitsCompleted = (habits) => {
-    const habitList = habits.map((habit) => {
-      const habitRecord = { ...habit };
-
-      habitRecord.key = habit.id;
-      datesThisWeek.forEach((date) => {
-        habitRecord[date.formatFull] = habit.goal;
-      });
-
-      return habitRecord;
+    habitRecord.key = habit.id;
+    datesThisWeek.forEach((date) => {
+      habitRecord[date.formatFull] = habit.goal;
     });
 
-    setTableData(habitList);
-  };
-
-  const { loading, error } = useQuery(ALL_HABITS, {
-    onCompleted: (data) => queryHabitsCompleted(data.allHabits),
+    return habitRecord;
   });
 
-  // eslint-disable-next-line no-console
-  if (error) console.log(`❗ ERROR: ${error}`);
+  const [habitList, setHabitList] = useState(userHabits || []);
 
   const generateColumnHeaders = () => {
     const daysArray = [];
@@ -107,8 +93,8 @@ const HabitTable = () => {
         return (
           <DestroyButton
             habitRecord={record}
-            tableData={tableData}
-            setTableData={setTableData}
+            habitList={habitList}
+            setHabitList={setHabitList}
           />
         );
       },
@@ -119,8 +105,7 @@ const HabitTable = () => {
   return (
     <>
       <Table
-        loading={loading || !!error}
-        dataSource={tableData}
+        dataSource={habitList}
         columns={columns}
         pagination={false}
         rowClassName={(record) => (
@@ -128,9 +113,8 @@ const HabitTable = () => {
         )}
       />
       <ActionButton
-        loading={loading || !!error}
-        tableData={tableData}
-        setTableData={setTableData}
+        habitList={habitList}
+        setHabitList={setHabitList}
       />
     </>
   );

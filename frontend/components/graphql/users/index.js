@@ -11,6 +11,17 @@ export const CURRENT_USER_QUERY = gql`
         name
         habits {
           id
+          title
+          goal
+          frequency
+          slug
+          emoji {
+            id
+            native
+            name
+            emojiId
+            unified
+          }
         }
       }
     }

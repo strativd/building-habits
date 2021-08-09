@@ -9,8 +9,8 @@ import { errorMessages } from '../lib';
 
 const DestroyButton = ({
   habitRecord,
-  tableData,
-  setTableData,
+  habitList,
+  setHabitList,
 }) => {
   const {
     originalHabit, editing, revertEdits,
@@ -18,11 +18,11 @@ const DestroyButton = ({
 
   const deleteHabit = (habit) => {
     if (habit) {
-      const newData = [...tableData];
+      const newData = [...habitList];
       const index = newData.findIndex((row) => row.id === habit.id);
 
       newData.splice(index, 1);
-      setTableData(newData);
+      setHabitList(newData);
       revertEdits();
       message.success(`Deleted ${habit.title}`);
     }
@@ -34,7 +34,7 @@ const DestroyButton = ({
   });
 
   const revertHabit = (habit) => {
-    const newData = [...tableData];
+    const newData = [...habitList];
     const isNewHabit = habit.key === 'new';
 
     if (isNewHabit) {
@@ -44,7 +44,7 @@ const DestroyButton = ({
       newData[index] = originalHabit; // revert habit data
     }
 
-    setTableData(newData);
+    setHabitList(newData);
     setTimeout(() => {
       // wait for PopConfirm animation to finish
       revertEdits({});

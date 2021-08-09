@@ -7,9 +7,8 @@ import { CREATE_HABIT, UPDATE_HABIT } from './graphql';
 import { errorMessages } from '../lib';
 
 const ActionButton = ({
-  loading,
-  tableData,
-  setTableData,
+  habitList,
+  setHabitList,
 }) => {
   const { editingHabit, revertEdits, createNewHabit } = useHabitEditor();
 
@@ -20,7 +19,7 @@ const ActionButton = ({
     if (habit) {
       let messageText;
       const newHabit = { ...habit, key: habit.id };
-      const newData = [...tableData];
+      const newData = [...habitList];
       // Get index of habit being saved and check if it exists
       const index = newData.findIndex((record) => newHabit.id === record.id);
 
@@ -35,7 +34,7 @@ const ActionButton = ({
       }
       // Update state of parent component
       revertEdits();
-      setTableData(newData);
+      setHabitList(newData);
       message.success(`${habit.title} ${messageText}`);
     }
   };
@@ -54,11 +53,9 @@ const ActionButton = ({
     onCompleted: (data) => updateTableData(data.updateHabit),
   });
 
-  if (loading) return null;
-
   const addHabit = () => {
     const newHabit = createNewHabit();
-    setTableData([...tableData, newHabit]);
+    setHabitList([...habitList, newHabit]);
   };
 
   const newHabitData = {
