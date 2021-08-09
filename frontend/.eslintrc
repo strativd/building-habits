@@ -14,6 +14,13 @@
       {
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "any"
+      }
+    ],
+    "radix": ["error", "as-needed"]
   }
 }
