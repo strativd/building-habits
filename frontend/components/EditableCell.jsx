@@ -5,40 +5,41 @@ import React from 'react';
 import { Input } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
+import { useHabitEditor } from './useHabitEditor';
+
 const EditableCell = ({
-  editing,
-  editRow,
-  setEditRow,
-  setPreEdit,
   habitRecord,
 }) => {
-  const setHabitData = (habit, key, value) => {
-    const newHabit = { ...habit };
-    newHabit[key] = value;
-    setEditRow(newHabit);
-  };
+  const {
+    editingHabit, editing, editHabit, startEditing,
+  } = useHabitEditor();
 
   const changeGoal = (habit, diff) => {
     const newGoal = habit.goal + diff;
     if (newGoal > 8 || newGoal < 1) return;
-    setHabitData(habit, 'goal', newGoal);
+    editHabit('goal', newGoal);
   };
 
-  const changeHabitTitle = (event, habit) => setHabitData(habit, 'title', event.target.value);
+  const changeHabitTitle = (event) => editHabit('title', event.target.value);
 
-  const enableEditHabit = (record) => {
-    if (!editing) {
-      setPreEdit(record);
-      setEditRow(record);
+  const enableEditHabit = (habit) => {
+    if (!editing(habitRecord)) startEditing(habit);
+  };
+
+  const handleKeypress = (event) => {
+    if (event.key === 'Enter') {
+      // document.querySelector('#action-button').click();
     }
   };
 
-  const cell = editing ? (
+  const cell = editing(habitRecord) ? (
     <Input
-      value={editRow.title}
-      addonBefore={<MinusOutlined onClick={() => changeGoal(editRow, -1)} />}
-      addonAfter={<PlusOutlined onClick={() => changeGoal(editRow, 1)} />}
-      onChange={(e) => changeHabitTitle(e, editRow)}
+      autoFocus
+      value={editingHabit.title}
+      addonBefore={<MinusOutlined onClick={() => changeGoal(editingHabit, -1)} />}
+      addonAfter={<PlusOutlined onClick={() => changeGoal(editingHabit, 1)} />}
+      onChange={(e) => changeHabitTitle(e)}
+      onKeyPress={(e) => handleKeypress(e)}
     />
   ) : <p className="habit-title--text">{habitRecord.title}</p>;
 

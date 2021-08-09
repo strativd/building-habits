@@ -1,14 +1,26 @@
 import { message } from 'antd';
 
-const errorMessages = (errors = [], messageText) => {
+const errorMessages = (response, messageText) => {
   // eslint-disable-next-line no-console
-  console.log({ errors, messageText });
-  if (messageText && messageText.length) {
+  console.log({ response, messageText });
+  const { errors, graphQLErrors, networkError } = response;
+  if (messageText?.length) {
     message.error(messageText);
-  } else if (errors.length) {
+  }
+  if (errors?.length) {
     errors.forEach((error) => message.error(error));
-  } else {
-    message.error('Oops! Please try again...');
+    return;
+  }
+  if (graphQLErrors?.length) {
+    graphQLErrors.forEach((error) => message.error(`Oops! Something went wrong. ${error.message}`));
+    return;
+  }
+  if (networkError) {
+    message.error(`Oops! Connection error. ${networkError}`);
+    return;
+  }
+  if (!messageText) {
+    message.error('Oops! Something went wrong...');
   }
 };
 

@@ -8,6 +8,7 @@ import { Picker } from 'emoji-mart';
 import { Modal, message } from 'antd';
 import { useMutation } from '@apollo/client';
 
+import { useHabitEditor } from './useHabitEditor';
 import { UPDATE_EMOJI } from './graphql';
 import { errorMessages } from '../lib';
 
@@ -19,9 +20,9 @@ const hideButtonProps = {
 
 const IconPicker = ({
   habitRecord,
-  editing,
 }) => {
   const HabitContext = createContext();
+  const { editing } = useHabitEditor();
 
   const [modal, contextHolder] = Modal.useModal();
 
@@ -40,7 +41,6 @@ const IconPicker = ({
         id: habitRecord.emoji.id,
       },
     };
-    console.log(newEmojiData);
 
     try {
       const { data } = await updateHabitEmoji(newEmojiData);
@@ -51,7 +51,7 @@ const IconPicker = ({
         name,
       });
     } catch (error) {
-      errorMessages(error.errors, `${emoji.native} Oops! Please try again...`);
+      errorMessages(error, `${emoji.native} Oops! Please try again...`);
     }
   };
 
@@ -84,7 +84,7 @@ const IconPicker = ({
   };
 
   const showIconPicker = () => {
-    if (!editing) modal.info(modalConfig);
+    if (!editing(habitRecord)) modal.info(modalConfig);
   };
 
   const renderIcon = <span role="img" aria-label={emoji.name}>{emoji.native}</span>;

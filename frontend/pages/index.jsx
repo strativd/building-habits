@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 
 import HabitTable from '../components/HabitTable';
+import { HabitContextProvider } from '../components/useHabitEditor';
 
 const { Footer, Header, Content } = Layout;
 
@@ -17,7 +18,9 @@ const Frame = () => (
     </Header>
     <Content className="site-layout" style={{ padding: '0 50px', marginTop: 64 }}>
       <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-        <HabitTable />
+        <HabitContextProvider>
+          <HabitTable />
+        </HabitContextProvider>
       </div>
     </Content>
     <Footer style={{ textAlign: 'center' }}>

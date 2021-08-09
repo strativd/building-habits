@@ -2,19 +2,19 @@ import React from 'react';
 import { message, Button } from 'antd';
 import { useMutation } from '@apollo/client';
 
+import { useHabitEditor } from './useHabitEditor';
 import { CREATE_HABIT, UPDATE_HABIT } from './graphql';
 import { errorMessages } from '../lib';
 
 const ActionButton = ({
   loading,
-  editRow,
-  setEditRow,
-  setPreEdit,
   tableData,
   setTableData,
 }) => {
-  const editingMode = !!editRow.key; // check if key exists
-  const addingHabit = editRow.key === 'new';
+  const { editingHabit, revertEdits, createNewHabit } = useHabitEditor();
+
+  const editingMode = !!editingHabit.key; // check if key exists
+  const addingHabit = editingHabit.key === 'new';
 
   const updateTableData = (habit) => {
     if (habit) {
@@ -34,9 +34,8 @@ const ActionButton = ({
         messageText = 'saved!';
       }
       // Update state of parent component
+      revertEdits();
       setTableData(newData);
-      setPreEdit({});
-      setEditRow({});
       message.success(`${habit.title} ${messageText}`);
     }
   };
@@ -44,39 +43,27 @@ const ActionButton = ({
   const [
     createHabit, { createLoading },
   ] = useMutation(CREATE_HABIT, {
-    onError: (res) => errorMessages(res.error),
+    onError: (res) => errorMessages(res),
     onCompleted: (data) => updateTableData(data.createHabit),
   });
 
   const [
     updateHabit, { updateLoading },
   ] = useMutation(UPDATE_HABIT, {
-    onError: (res) => errorMessages(res.error),
+    onError: (res) => errorMessages(res),
     onCompleted: (data) => updateTableData(data.updateHabit),
   });
 
   if (loading) return null;
 
-  const addNewHabit = () => {
-    const newHabit = {
-      key: 'new',
-      title: '',
-      goal: 1,
-      frequency: 'daily',
-      emoji: {
-        native: '👉',
-        name: 'hand pointing to the right',
-      },
-    };
-
-    setPreEdit(newHabit);
-    setEditRow(newHabit);
+  const addHabit = () => {
+    const newHabit = createNewHabit();
     setTableData([...tableData, newHabit]);
   };
 
   const newHabitData = {
     variables: {
-      ...editRow,
+      ...editingHabit,
     },
   };
 
@@ -87,19 +74,19 @@ const ActionButton = ({
     };
 
     return (
-      <Button id="action-button" type="primary" loading={createLoading} onClick={() => createHabit(newHabitData)}>
+      <Button id="action-button" type="primary" size="large" loading={createLoading} onClick={() => createHabit(newHabitData)}>
         SAVE HABIT
       </Button>
     );
   } if (editingMode) {
     return (
-      <Button id="action-button" type="primary" loading={updateLoading} onClick={() => updateHabit(newHabitData)}>
+      <Button id="action-button" type="primary" size="large" loading={updateLoading} onClick={() => updateHabit(newHabitData)}>
         SAVE CHANGES
       </Button>
     );
   }
   return (
-    <Button id="action-button" type="primary" onClick={() => addNewHabit()}>
+    <Button id="action-button" type="default" size="large" onClick={() => addHabit()}>
       ADD HABIT
     </Button>
   );

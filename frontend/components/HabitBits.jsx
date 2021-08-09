@@ -3,17 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from '@apollo/client';
 import { Checkbox } from 'antd';
 
+import { useHabitEditor } from './useHabitEditor';
 import { GET_INITIAL_PROGRESS, UPDATE_PROGRESS_COUNT } from './graphql';
 import { errorMessages } from '../lib';
 
 const HabitBits = ({
-  editing,
-  editRow,
   habitRecord,
   columnCount,
   date,
 }) => {
   const [habitProgress, setHabitProgress] = useState({});
+
+  const { editingHabit, editing } = useHabitEditor();
 
   const [initialProgress] = useMutation(GET_INITIAL_PROGRESS, {
     skip: habitRecord.key === 'new',
@@ -28,7 +29,7 @@ const HabitBits = ({
   const [
     updateProgressCount, { updateLoading, updateError },
   ] = useMutation(UPDATE_PROGRESS_COUNT, {
-    onError: (res) => errorMessages(res.errors),
+    onError: (res) => errorMessages(res),
   });
 
   const habitId = habitRecord.id;
@@ -76,9 +77,9 @@ const HabitBits = ({
     return bits;
   };
 
-  return editing && isFirstColumn ? (
+  return editing(habitRecord) && isFirstColumn ? (
     <>
-      {renderBits(editRow.goal, true)}
+      {renderBits(editingHabit.goal, true)}
     </>
   ) : (
     <>

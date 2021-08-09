@@ -3,17 +3,19 @@ import { message, Popconfirm } from 'antd';
 import { CloseCircleFilled, QuestionCircleOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 
+import { useHabitEditor } from './useHabitEditor';
 import { DELETE_HABIT } from './graphql';
 import { errorMessages } from '../lib';
 
 const DestroyButton = ({
-  record,
-  editing,
-  setEditRow,
-  preEdit,
+  habitRecord,
   tableData,
   setTableData,
 }) => {
+  const {
+    originalHabit, editing, revertEdits,
+  } = useHabitEditor();
+
   const deleteHabit = (habit) => {
     if (habit) {
       const newData = [...tableData];
@@ -21,13 +23,13 @@ const DestroyButton = ({
 
       newData.splice(index, 1);
       setTableData(newData);
-      setEditRow({});
-      message.success(`${habit.title} deleted!`);
+      revertEdits();
+      message.success(`Deleted ${habit.title}`);
     }
   };
 
   const [deleteHabitMutation] = useMutation(DELETE_HABIT, {
-    onError: (res) => errorMessages(res.errors),
+    onError: (res) => errorMessages(res),
     onCompleted: (data) => deleteHabit(data.deleteHabit),
   });
 
@@ -39,23 +41,23 @@ const DestroyButton = ({
       newData.pop(); // remove editing row
     } else {
       const index = newData.findIndex((row) => row.id === habit.id);
-      newData[index] = preEdit; // revert habit data
+      newData[index] = originalHabit; // revert habit data
     }
 
     setTableData(newData);
     setTimeout(() => {
       // wait for PopConfirm animation to finish
-      setEditRow({});
+      revertEdits({});
     }, 300);
   };
 
-  return editing ? (
+  return editing(habitRecord) ? (
     <Popconfirm
       title="Undo changes?"
       cancelText="Nope"
       okText="Undo!"
       icon={<QuestionCircleOutlined />}
-      onConfirm={() => revertHabit(record)}
+      onConfirm={() => revertHabit(habitRecord)}
     >
       <CloseCircleFilled />
     </Popconfirm>
@@ -66,7 +68,7 @@ const DestroyButton = ({
       okText="Delete!"
       okButtonProps={{ danger: true }}
       icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-      onConfirm={() => deleteHabitMutation({ variables: { id: record.id } })}
+      onConfirm={() => deleteHabitMutation({ variables: { id: habitRecord.id } })}
     >
       <CloseCircleFilled />
     </Popconfirm>

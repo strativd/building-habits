@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Table } from 'antd';
 import { useQuery } from '@apollo/client';
 
+import { useHabitEditor } from './useHabitEditor';
 import ActionButton from './ActionButton';
 import DestroyButton from './DestroyButton';
 import EditableCell from './EditableCell';
@@ -14,6 +15,9 @@ const datesThisWeek = getDatesThisWeek();
 
 const HabitTable = () => {
   const [tableData, setTableData] = useState([]);
+
+  const { editingHabit, editing } = useHabitEditor();
+
   const [editRow, setEditRow] = useState({});
   const [preEdit, setPreEdit] = useState({});
 
@@ -39,8 +43,6 @@ const HabitTable = () => {
   // eslint-disable-next-line no-console
   if (error) console.log(`❗ ERROR: ${error}`);
 
-  const isEditing = (record) => record.key === editRow.key;
-
   const generateColumnHeaders = () => {
     const daysArray = [];
 
@@ -55,13 +57,11 @@ const HabitTable = () => {
       title: renderHeader(date),
       dataIndex: date.formatFull,
       width: '10%',
-      shouldCellUpdate: (_, prevRecord) => isEditing(prevRecord) || index === 0,
+      shouldCellUpdate: (_, prevRecord) => editing(prevRecord) || index === 0,
       displayName: 'HabitBits',
       render: function renderHabitBits(_, record) {
         return (
           <HabitBits
-            editing={isEditing(record)}
-            editRow={editRow}
             habitRecord={record}
             columnCount={index + 1}
             date={date.formatFull}
@@ -81,10 +81,7 @@ const HabitTable = () => {
       className: 'habit-icon',
       render: function renderEmojiPicker(_, record) {
         return (
-          <EmojiPicker
-            habitRecord={record}
-            editing={isEditing(record)}
-          />
+          <EmojiPicker habitRecord={record} />
         );
       },
     },
@@ -96,13 +93,7 @@ const HabitTable = () => {
       className: 'habit-title',
       render: function renderEditableCell(_, record) {
         return (
-          <EditableCell
-            editing={isEditing(record)}
-            editRow={editRow}
-            setEditRow={setEditRow}
-            setPreEdit={setPreEdit}
-            habitRecord={record}
-          />
+          <EditableCell habitRecord={record} />
         );
       },
     },
@@ -115,10 +106,7 @@ const HabitTable = () => {
       render: function renderDestroyButton(_, record) {
         return (
           <DestroyButton
-            record={record}
-            editing={isEditing(record)}
-            setEditRow={setEditRow}
-            preEdit={preEdit}
+            habitRecord={record}
             tableData={tableData}
             setTableData={setTableData}
           />
@@ -136,14 +124,11 @@ const HabitTable = () => {
         columns={columns}
         pagination={false}
         rowClassName={(record) => (
-          isEditing(record) ? 'row--editable row--editable__editing' : 'row--editable'
+          editing(record) ? 'row--editable row--editable__editing' : 'row--editable'
         )}
       />
       <ActionButton
         loading={loading || !!error}
-        editRow={editRow}
-        setEditRow={setEditRow}
-        setPreEdit={setPreEdit}
         tableData={tableData}
         setTableData={setTableData}
       />

@@ -81,10 +81,8 @@ label.ant-checkbox-wrapper {
   .habit-title--text {
     border-bottom: 2px solid transparent;
     margin: 0;
-  }
 
-  &:hover {
-    .habit-title--text {
+    &:hover {
       border-bottom: 2px solid #a6d47b40;
     }
   }
@@ -93,8 +91,11 @@ label.ant-checkbox-wrapper {
 // Action buttons
 
 button#action-button {
-  margin: 25px 16px;
-  height: 50px;
+  border: 2px solid #75b748;
+  margin: 25px 0;
+  padding: 1rem;
+  height: auto;
+  min-width: 100%;
 }
 
 // Emoji Picker
