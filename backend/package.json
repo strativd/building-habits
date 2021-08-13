@@ -9,7 +9,14 @@
   "repository": "https://github.com/ztratify/building-habits",
   "scripts": {
     "dev": "keystone-next",
-    "seed-data": "keystone-next --seed-data"
+    "build": "keystone-next build",
+    "start": "keystone-next start -p $PORT",
+    "seed-data": "keystone-next --seed-data",
+    "publishToHeroku": "cd ../ && git subtree push --prefix backend heroku-backend main || true",
+    "// what? //": "at root of local git, push 'backend' (dir) to 'heroku-backend' (remote git) on 'master' (branch)"
+  },
+  "engines": {
+    "node": "16.x"
   },
   "eslintConfig": {
     "extends": [
@@ -71,8 +78,5 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "^2.2.1",
     "typescript": "^4.1.2"
-  },
-  "engines": {
-    "node": ">=14.0.0"
   }
 }

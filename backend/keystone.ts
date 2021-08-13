@@ -12,11 +12,19 @@ import { extendGraphqlSchema } from "./mutations";
 import { User, Habit, Emoji, Progress } from "./schemas";
 
 const databaseURL =
-  process.env.DATABASE_URL || "mongodb://localhost/keystone-sick-fits-tutorial";
+  process.env.NODE_ENV === "production"
+    ? process.env.PROD_DATABASE_URL
+    : process.env.DEV_DATABASE_URL;
+
+const frontendURL =
+  process.env.NODE_ENV === "production"
+    ? process.env.PROD_FRONTEND_URL
+    : process.env.DEV_FRONTEND_URL;
 
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // How long they stay signed in?
   secret: process.env.COOKIE_SECRET,
+  secure: false,
 };
 
 const { withAuth } = createAuth({
@@ -31,10 +39,9 @@ const { withAuth } = createAuth({
 
 export default withAuth(
   config({
-    // @ts-ignore
     server: {
       cors: {
-        origin: [process.env.FRONTEND_URL],
+        origin: [frontendURL],
         credentials: true,
       },
     },
