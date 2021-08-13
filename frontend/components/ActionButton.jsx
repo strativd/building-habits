@@ -13,7 +13,7 @@ const ActionButton = ({
   const { editingHabit, revertEdits, createNewHabit } = useHabitEditor();
 
   const editingMode = !!editingHabit.key; // check if key exists
-  const addingHabit = editingHabit.key === 'new';
+  const addingHabit = editingHabit.key === 'NEW';
 
   const updateTableData = (habit) => {
     if (habit) {

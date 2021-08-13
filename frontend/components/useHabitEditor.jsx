@@ -28,10 +28,10 @@ function HabitContextProvider({ children }) {
 
   const createNewHabit = () => {
     const habit = {
-      key: 'new',
+      key: 'NEW',
       title: '',
       goal: 1,
-      frequency: 'daily',
+      frequency: 'DAILY',
       emoji: {
         native: '👉',
         name: 'hand pointing to the right',

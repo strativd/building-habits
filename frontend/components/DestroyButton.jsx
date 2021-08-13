@@ -35,7 +35,7 @@ const DestroyButton = ({
 
   const revertHabit = (habit) => {
     const newData = [...habitList];
-    const isNewHabit = habit.key === 'new';
+    const isNewHabit = habit.key === 'NEW';
 
     if (isNewHabit) {
       newData.pop(); // remove editing row

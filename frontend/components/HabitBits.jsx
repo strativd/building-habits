@@ -17,7 +17,7 @@ const HabitBits = ({
   const { editingHabit, editing } = useHabitEditor();
 
   const [initialProgress] = useMutation(GET_INITIAL_PROGRESS, {
-    skip: habitRecord.key === 'new',
+    skip: habitRecord.key === 'NEW',
     variables: {
       habitId: habitRecord.id,
       date,
