@@ -7,7 +7,7 @@ import {
   select,
 } from "@keystone-next/fields";
 
-import { readOnly } from ".";
+import { readOnlyField } from ".";
 import convertToSlug from "../lib/convertToSlug";
 
 // import { permissions, rules } from '../access';
@@ -52,11 +52,11 @@ export const Habit = list({
       ref: "Progress.habit",
     }),
     createdAt: timestamp({
-      ...readOnly,
+      ...readOnlyField,
       defaultValue: new Date().toISOString(),
     }),
     slug: text({
-      ...readOnly,
+      ...readOnlyField,
       isUnique: true,
     }),
   },

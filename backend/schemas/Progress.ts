@@ -1,6 +1,6 @@
 import { list } from "@keystone-next/keystone/schema";
 import { relationship, text, integer, virtual } from "@keystone-next/fields";
-import { readOnly } from ".";
+import { readOnlyField } from ".";
 
 // import { permissions, rules } from '../access';
 
@@ -35,7 +35,7 @@ export const Progress = list({
     }),
     date: text({ isRequired: true }),
     habitId: text({
-      ...readOnly,
+      ...readOnlyField,
     }),
   },
   hooks: {
