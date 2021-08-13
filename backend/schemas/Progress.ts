@@ -5,7 +5,6 @@ import { readOnlyField } from ".";
 // import { permissions, rules } from '../access';
 
 export const Progress = list({
-  label: "Progress",
   description: "Habit progress",
   ui: {
     listView: {
