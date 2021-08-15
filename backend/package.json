@@ -12,8 +12,8 @@
     "build": "keystone-next build",
     "start": "keystone-next start -p $PORT",
     "seed-data": "keystone-next --seed-data",
-    "publishToHeroku": "cd ../ && git subtree push --prefix backend heroku-backend main || true",
-    "// what? //": "at root of local git, push 'backend' (dir) to 'heroku-backend' (remote git) on 'master' (branch)"
+    "publishToHeroku": "cd ../ && git push heroku-backend `git subtree split --prefix backend main`:main",
+    "// what? //": "from root of local git, push to 'heroku-backend/main' (remote) from 'backend' sub-directory"
   },
   "engines": {
     "node": "16.x"

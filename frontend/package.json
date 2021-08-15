@@ -11,8 +11,8 @@
     "dev": "next -p 1234",
     "build": "next build",
     "start": "next start -p $PORT",
-    "publishToHeroku": "cd ../ && git subtree push --prefix frontend heroku main || true",
-    "// what? //": "at root of local git, push 'frontend' (dir) to 'heroku' (remote git) on 'master' (branch)"
+    "publishToHeroku": "cd ../ && git push heroku-frontend `git subtree split --prefix frontend main`:master",
+    "// what? //": "from root of local git, push to 'heroku-frontend/master' (remote) from 'frontend' sub-directory"
   },
   "engines": {
     "node": "16.x"
