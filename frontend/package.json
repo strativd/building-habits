@@ -10,12 +10,12 @@
   "scripts": {
     "dev": "next -p 1234",
     "build": "next build",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "publishToHeroku": "cd ../ && git push heroku-frontend `git subtree split --prefix frontend main`:master",
     "// what? //": "from root of local git, push to 'heroku-frontend/master' (remote) from 'frontend' sub-directory"
   },
   "engines": {
-    "node": "16.x"
+    "node": "14.x"
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
