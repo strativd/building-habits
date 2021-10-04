@@ -8,18 +8,10 @@ import {
 
 import { insertSeedData } from "./seed-data";
 import { extendGraphqlSchema } from "./mutations";
+import { sendPasswordResetEmail } from "./lib/mailer";
+import { frontendURL, databaseURL } from "./lib/urls";
 
 import { User, Habit, Emoji, Progress } from "./schemas";
-
-const databaseURL =
-  process.env.NODE_ENV === "production"
-    ? process.env.PROD_DATABASE_URL
-    : process.env.DEV_DATABASE_URL;
-
-const frontendURL =
-  process.env.NODE_ENV === "production"
-    ? process.env.PROD_FRONTEND_URL
-    : process.env.DEV_FRONTEND_URL;
 
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // How long they stay signed in?
@@ -34,6 +26,11 @@ const { withAuth } = createAuth({
   initFirstItem: {
     fields: ["name", "email", "password"],
     // TODO: Add in inital roles here
+  },
+  passwordResetLink: {
+    async sendToken(args) {
+      await sendPasswordResetEmail(args.token, args.identity);
+    },
   },
 });
 

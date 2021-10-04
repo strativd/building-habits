@@ -1,42 +1,54 @@
-import React, { useState } from 'react';
+/* eslint-disable no-console */
+import React from 'react';
 import { useMutation } from '@apollo/client';
 import {
   Form, Input, Button, message,
 } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useRouter } from 'next/router';
 
+import Error from './ErrorMessage';
+import Login from './Login';
 import { Card } from './styles/components';
-import { CURRENT_USER_QUERY, SIGNIN_MUTATION } from './graphql/users';
+import { RESET_PASSWORD_MUTATION } from './graphql/users';
 import ResetRequest from './ResetRequest';
 
-export default function SignIn() {
-  const [showReset, setShowReset] = useState(false);
+export default function ResetPassword({ token }) {
   const [form] = Form.useForm();
 
-  const [signin, { loading }] = useMutation(SIGNIN_MUTATION, {
-    // refectch the currently logged in user
-    refetchQueries: [{ query: CURRENT_USER_QUERY }],
-  });
+  const [resetPassword, { data, loading, error }] = useMutation(
+    RESET_PASSWORD_MUTATION,
+    {
+      variables: {
+        ...form.getFieldsValue(),
+        token,
+      },
+    },
+  );
 
-  const router = useRouter();
+  const resetSuccessful = data?.redeemUserPasswordResetToken === null;
 
-  const onFinish = async (values) => {
-    const res = await signin({ variables: values });
+  const validationError = data?.redeemUserPasswordResetToken?.code
+    ? data.redeemUserPasswordResetToken
+    : undefined;
 
-    form.resetFields(['password']);
+  async function handleSubmit() {
+    await resetPassword()
+      .then(() => {
+        form.resetFields(['password']);
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error('Oh oh... Something went wrong 😬');
+      });
+  }
 
-    const { message: error, item: user } = res?.data?.authenticateUserWithPassword;
+  if (resetSuccessful) {
+    message.success('Your password has been reset 🔑');
 
-    if (user) {
-      message.success(`👋 Hey ${user.name}!`);
-      router.push({ pathname: '/' });
-    } else if (error) {
-      message.error(`Oops! ${error}`);
-    } else {
-      message.error('Oops! Please try again...');
-    }
-  };
+    return (
+      <Login />
+    );
+  }
 
   return (
     <>
@@ -44,10 +56,13 @@ export default function SignIn() {
         <Form
           method="POST"
           form={form}
-          name="login"
-          onFinish={onFinish}
+          name="reset-password"
+          onFinish={handleSubmit}
         >
-          <h1>Log in 👋</h1>
+          <h1>Reset password!</h1>
+
+          <Error error={error || validationError} />
+
           <Form.Item
             name="email"
             rules={[
@@ -78,19 +93,13 @@ export default function SignIn() {
 
           <Form.Item>
             <Button type="primary" size="large" htmlType="submit" disabled={loading}>
-              Log in
+              Save password
             </Button>
           </Form.Item>
-
-          <p>
-            <Button type="link" onClick={() => setShowReset(!showReset)}>Reset your password... 🤷</Button>
-          </p>
         </Form>
       </Card>
 
-      <div style={{ display: showReset ? 'block' : 'none' }}>
-        <ResetRequest />
-      </div>
+      {(validationError || error) && <ResetRequest />}
     </>
   );
 }
