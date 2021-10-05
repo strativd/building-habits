@@ -8,9 +8,11 @@ var prodTransport = createTransport({
   port: process.env.PROD_MAIL_PORT,
   secure: true,
   auth: {
-    user: process.env.PROD_MAIL_USER,
-    pass: process.env.PROD_MAIL_PASS,
+    user: encodeURIComponent(process.env.PROD_MAIL_USER),
+    pass: encodeURIComponent(process.env.PROD_MAIL_PASS),
   },
+  logger: true,
+  debug: true,
 });
 
 const devTransport = createTransport({
@@ -79,12 +81,12 @@ export async function sendPasswordResetEmail(
   // email the user a token
   const info = (await transport.sendMail({
     to,
-    from: `HaBits <${process.env.PROD_MAIL_USER}>`,
+    from: process.env.PROD_MAIL_USER,
     subject: "✅ HaBits – password reset token",
     html: generateHTML(resetToken),
   })) as MailResponse;
 
-  if (process.env.MAIL_USER.includes("ethereal.email")) {
+  if (process.env.NODE_ENV !== "production") {
     console.log(`💌 Message Sent! Preview it at ${getTestMessageUrl(info)}`);
   }
 }
