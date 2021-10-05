@@ -7,13 +7,9 @@ var prodTransport = createTransport({
   host: process.env.PROD_MAIL_HOST,
   port: process.env.PROD_MAIL_PORT,
   secure: true,
-  requireTLS: true,
-  tls: {
-    rejectUnauthorized: false,
-  },
   auth: {
-    user: encodeURIComponent(process.env.PROD_MAIL_USER),
-    pass: encodeURIComponent(process.env.PROD_MAIL_PASS),
+    user: process.env.PROD_MAIL_USER,
+    pass: process.env.PROD_MAIL_PASS,
   },
 });
 
@@ -83,7 +79,7 @@ export async function sendPasswordResetEmail(
   // email the user a token
   const info = (await transport.sendMail({
     to,
-    from: `HaBits <${process.env.PROD_MAIL_HOST}>`,
+    from: `HaBits <${process.env.PROD_MAIL_USER}>`,
     subject: "✅ HaBits – password reset token",
     html: generateHTML(resetToken),
   })) as MailResponse;
