@@ -1,23 +1,22 @@
-// @ts-nocheck
 import { createTransport, getTestMessageUrl } from "nodemailer";
 
 import { frontendURL } from "./urls";
 
 var prodTransport = createTransport({
   host: process.env.PROD_MAIL_HOST,
-  port: process.env.PROD_MAIL_PORT,
-  secure: true,
+  port: Number(process.env.PROD_MAIL_PORT),
   auth: {
-    user: encodeURIComponent(process.env.PROD_MAIL_USER),
-    pass: encodeURIComponent(process.env.PROD_MAIL_PASS),
+    user: process.env.PROD_MAIL_USER,
+    pass: process.env.PROD_MAIL_PASS,
   },
+  secure: true,
   logger: true,
   debug: true,
 });
 
 const devTransport = createTransport({
   host: process.env.MAIL_HOST,
-  port: process.env.MAIL_PORT,
+  port: Number(process.env.MAIL_PORT),
   auth: {
     user: process.env.MAIL_USER,
     pass: process.env.MAIL_PASS,
@@ -79,12 +78,12 @@ export async function sendPasswordResetEmail(
   to: string
 ): Promise<void> {
   // email the user a token
-  const info = (await transport.sendMail({
+  const info = await transport.sendMail({
     to,
     from: process.env.PROD_MAIL_USER,
     subject: "✅ HaBits – password reset token",
     html: generateHTML(resetToken),
-  })) as MailResponse;
+  });
 
   if (process.env.NODE_ENV !== "production") {
     console.log(`💌 Message Sent! Preview it at ${getTestMessageUrl(info)}`);
