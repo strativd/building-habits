@@ -1,11 +1,19 @@
 import { list } from "@keystone-next/keystone/schema";
 import { relationship, text, integer, virtual } from "@keystone-next/fields";
-import { readOnlyField } from ".";
+
+import { readField } from ".";
+import { isSignedIn, rules } from "../access";
 
 // import { permissions, rules } from '../access';
 
 export const Progress = list({
   description: "Habit progress",
+  access: {
+    create: isSignedIn,
+    read: rules.isHabitOwner,
+    update: rules.isHabitOwner,
+    delete: rules.isHabitOwner,
+  },
   ui: {
     listView: {
       initialColumns: ["habit", "count", "date"],
@@ -34,7 +42,7 @@ export const Progress = list({
     }),
     date: text({ isRequired: true }),
     habitId: text({
-      ...readOnlyField,
+      ...readField,
     }),
   },
   hooks: {

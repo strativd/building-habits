@@ -7,12 +7,17 @@ import {
   select,
 } from "@keystone-next/fields";
 
-import { readOnlyField } from ".";
+import { readField, hiddenField } from ".";
+import { isSignedIn, rules } from "../access";
 import convertToSlug from "../lib/convertToSlug";
 
-// import { permissions, rules } from '../access';
-
 export const Habit = list({
+  access: {
+    create: isSignedIn,
+    read: rules.canManageHabits,
+    update: rules.canManageHabits,
+    delete: rules.canManageHabits,
+  },
   ui: {
     listView: {
       initialColumns: ["title", "goal", "frequency", "owner"],
@@ -50,13 +55,14 @@ export const Habit = list({
     progress: relationship({
       many: true,
       ref: "Progress.habit",
+      ...hiddenField,
     }),
     createdAt: timestamp({
-      ...readOnlyField,
+      ...readField,
       defaultValue: new Date().toISOString(),
     }),
     slug: text({
-      ...readOnlyField,
+      ...readField,
       isUnique: true,
     }),
   },

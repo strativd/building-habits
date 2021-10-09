@@ -1,10 +1,16 @@
 import { list } from "@keystone-next/keystone/schema";
 import { relationship, text } from "@keystone-next/fields";
 
-// import { permissions, rules } from '../access';
+import { isSignedIn, rules } from "../access";
 
 export const Emoji = list({
   description: "Habit Emoji",
+  access: {
+    create: isSignedIn,
+    read: rules.isHabitOwner,
+    update: rules.isHabitOwner,
+    delete: rules.isHabitOwner,
+  },
   ui: {
     listView: {
       initialColumns: ["habit", "native"],

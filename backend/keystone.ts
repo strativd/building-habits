@@ -9,9 +9,9 @@ import {
 import { insertSeedData } from "./seed-data";
 import { extendGraphqlSchema } from "./mutations";
 import { sendPasswordResetEmail } from "./lib/mailer";
-import { frontendURL, databaseURL } from "./lib/urls";
 
-import { User, Habit, Emoji, Progress } from "./schemas";
+import { User, Habit, Emoji, Progress, Role } from "./schemas";
+import { permissionsList } from "./schemas/permissionFields";
 
 const sessionConfig = {
   maxAge: 60 * 60 * 24 * 360, // How long they stay signed in?
@@ -38,13 +38,13 @@ export default withAuth(
   config({
     server: {
       cors: {
-        origin: [frontendURL],
+        origin: [process.env.FRONTEND_URL],
         credentials: true,
       },
     },
     db: {
       adapter: "mongoose",
-      url: databaseURL,
+      url: process.env.DATABASE_URL,
       // Add data seeding here
       onConnect: async (keystone) => {
         if (process.argv.includes("--seed-data")) {
@@ -57,6 +57,7 @@ export default withAuth(
       Habit,
       Emoji,
       Progress,
+      Role,
     }),
     extendGraphqlSchema,
     ui: {
@@ -67,7 +68,8 @@ export default withAuth(
     },
     session: withItemData(statelessSessions(sessionConfig), {
       // GraphQL Query
-      User: "id name email",
+      // + spread all permissions
+      User: `id name email role { ${permissionsList.join(" ")} }`,
     }),
   })
 );

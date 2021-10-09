@@ -1,7 +1,5 @@
 import { createTransport, getTestMessageUrl } from "nodemailer";
 
-import { frontendURL } from "./urls";
-
 var prodTransport = createTransport({
   host: process.env.PROD_MAIL_HOST,
   port: Number(process.env.PROD_MAIL_PORT),
@@ -10,16 +8,16 @@ var prodTransport = createTransport({
     pass: process.env.PROD_MAIL_PASS,
   },
   secure: true,
-  logger: true,
-  debug: true,
+  // logger: true,
+  // debug: true,
 });
 
 const devTransport = createTransport({
-  host: process.env.MAIL_HOST,
-  port: Number(process.env.MAIL_PORT),
+  host: process.env.DEV_MAIL_HOST,
+  port: Number(process.env.DEV_MAIL_PORT),
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: process.env.DEV_MAIL_USER,
+    pass: process.env.DEV_MAIL_PASS,
   },
 });
 
@@ -49,7 +47,7 @@ function generateHTML(resetToken: string) {
           Your <b>Password Reset Token</b> is here!
         </p>
         <h3>
-          <a href="${frontendURL}/reset?token=${resetToken}" style="color: #75B748">Reset your password.</a>
+          <a href="${process.env.FRONTEND_URL}/reset?token=${resetToken}" style="color: #75B748">Reset your password.</a>
         </h3>
         <p>HaBits ✅</p>
       </div>
@@ -80,8 +78,8 @@ export async function sendPasswordResetEmail(
   // email the user a token
   const info = await transport.sendMail({
     to,
-    from: process.env.PROD_MAIL_USER,
-    subject: "✅ HaBits – password reset token",
+    from: `HaBits <${process.env.PROD_MAIL_USER}>`,
+    subject: "HaBits ✅ Password reset token",
     html: generateHTML(resetToken),
   });
 
