@@ -1,10 +1,9 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useMutation } from '@apollo/client';
 import { Checkbox } from 'antd';
 
 import { useHabitEditor } from './useHabitEditor';
-import { GET_INITIAL_PROGRESS, UPDATE_PROGRESS_COUNT } from './graphql';
+import { SET_INITIAL_PROGRESS, UPDATE_PROGRESS_COUNT } from './graphql';
 import { errorMessages } from '../lib';
 
 const HabitBits = ({
@@ -12,53 +11,62 @@ const HabitBits = ({
   columnCount,
   date,
 }) => {
+  const wrapper = useRef(null);
   const [habitProgress, setHabitProgress] = useState({});
 
   const { editingHabit, editing } = useHabitEditor();
 
-  const [initialProgress] = useMutation(GET_INITIAL_PROGRESS, {
+  const [initialProgress] = useMutation(SET_INITIAL_PROGRESS, {
     skip: habitRecord.key === 'NEW',
     variables: {
       habitId: habitRecord.id,
       date,
     },
-    // eslint-disable-next-line no-console
     onError: (res) => console.log(res),
   });
 
-  const [
-    updateProgressCount, { updateLoading, updateError },
-  ] = useMutation(UPDATE_PROGRESS_COUNT, {
+  const [updateProgressCount] = useMutation(UPDATE_PROGRESS_COUNT, {
     onError: (res) => errorMessages(res),
   });
 
-  const habitId = habitRecord.id;
   useEffect(async () => {
-    if (habitId) {
+    if (habitRecord.id) {
       const { data } = await initialProgress();
       setHabitProgress(data.initialProgress);
     }
-  }, [habitId]);
+  }, [habitRecord.id]);
 
   const isFirstColumn = columnCount === 1;
-  // const count = habitProgress.count || 0;
+
+  const animateEmoji = (count) => {
+    if (!wrapper) return;
+    const bits = wrapper.current.querySelectorAll('.progress-animation');
+    const lastBit = bits[count - 1];
+    if (lastBit) {
+      lastBit.classList.remove('float');
+      setTimeout(() => {
+        lastBit.classList.add('float');
+      }, 0);
+    }
+  };
 
   const handleClick = (event) => {
-    const { count, id } = habitProgress;
-    const { checked } = event.target;
-    const newCount = checked ? count + 1 : count - 1;
+    const { count: prevCount, id } = habitProgress;
+    const count = event.target.checked ? prevCount + 1 : prevCount - 1;
 
     updateProgressCount({
       variables: {
         id,
-        count: newCount,
+        count,
       },
     });
 
     setHabitProgress({
       ...habitProgress,
-      count: newCount,
+      count,
     });
+
+    if (count > prevCount) animateEmoji(count);
   };
 
   const renderBits = (goal, editMode) => {
@@ -66,11 +74,16 @@ const HabitBits = ({
 
     for (let i = 0; i < goal; i += 1) {
       bits.push(
-        <Checkbox
-          key={i}
-          checked={editMode || habitProgress.count > i}
-          onClick={(e) => handleClick(e)}
-        />,
+        <span
+          key={`HaBit-${i}`}
+          className="progress-animation"
+          data-emoji={habitRecord.emoji.native}
+        >
+          <Checkbox
+            checked={editMode || habitProgress.count > i}
+            onClick={(e) => handleClick(e)}
+          />
+        </span>,
       );
     }
 
@@ -82,9 +95,9 @@ const HabitBits = ({
       {renderBits(editingHabit.goal, true)}
     </>
   ) : (
-    <>
+    <div ref={wrapper}>
       {renderBits(habitRecord.goal)}
-    </>
+    </div>
   );
 };
 

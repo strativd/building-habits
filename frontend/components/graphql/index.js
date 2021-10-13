@@ -19,8 +19,8 @@ export const ALL_HABITS = gql`
   }
 `;
 
-export const GET_INITIAL_PROGRESS = gql`
-  mutation GET_INITIAL_PROGRESS($habitId: ID! $date: String!) {
+export const SET_INITIAL_PROGRESS = gql`
+  mutation SET_INITIAL_PROGRESS($habitId: ID! $date: String!) {
     initialProgress(habitId: $habitId, date: $date) {
       id
       count

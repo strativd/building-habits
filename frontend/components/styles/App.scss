@@ -22,6 +22,10 @@
       vertical-align: top;
     }
   }
+
+  @media screen and (max-width: 789px) {
+    padding: 0;
+  }
 }
 
 .site-layout {
@@ -32,6 +36,10 @@
   .site-layout__background {
     padding: 24px;
     min-height: 360px;
+  }
+
+  @media screen and (max-width: 789px) {
+    padding: 0;
   }
 }
 
@@ -130,4 +138,48 @@ button#action-button {
   border: none;
   margin: 0px auto;
   width: 100% !important; // override inline style
+}
+
+// Emoji animation
+
+.progress-animation {
+  position: relative;
+
+  &:after {
+    content: attr(data-emoji);
+    font-size: 25px;
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  &.float {
+    &:after {
+      animation: floating 1.5s 1 ease-out;
+    }
+  }
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+    right: 0;
+  }
+  25% {
+    right: 10px;
+  }
+  50% {
+    right: -10px;
+  }
+  75% {
+    right: 10px;
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+    right: 0;
+  }
 }
