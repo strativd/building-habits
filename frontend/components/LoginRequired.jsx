@@ -1,6 +1,6 @@
 import React from 'react';
 
-import useUser from '../lib/useUser';
+import useUser from './useUser';
 import Login from './Login';
 
 export default function LoginRequired({ children }) {

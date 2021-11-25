@@ -1,13 +1,13 @@
 import React from 'react';
 
-import HabitTable from '../components/HabitTable';
+import HabitsGrid from '../components/HabitsGrid';
 import LoginRequired from '../components/LoginRequired';
-import { HabitContextProvider } from '../components/useHabitEditor';
+import { HabitContextProvider } from '../components/useHabits';
 
 const Home = () => (
   <LoginRequired>
     <HabitContextProvider>
-      <HabitTable />
+      <HabitsGrid />
     </HabitContextProvider>
   </LoginRequired>
 );

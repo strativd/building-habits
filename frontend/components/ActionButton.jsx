@@ -2,15 +2,14 @@ import React from 'react';
 import { message, Button } from 'antd';
 import { useMutation } from '@apollo/client';
 
-import { useHabitEditor } from './useHabitEditor';
+import { useHabits } from './useHabits';
 import { CREATE_HABIT, UPDATE_HABIT } from './graphql';
 import { errorMessages } from '../lib';
 
-const ActionButton = ({
-  habitList,
-  setHabitList,
-}) => {
-  const { editingHabit, revertEdits, createNewHabit } = useHabitEditor();
+const ActionButton = () => {
+  const {
+    habits, setHabits, editingHabit, revertEdits, createNewHabit,
+  } = useHabits();
 
   const editingMode = !!editingHabit.key; // check if key exists
   const addingHabit = editingHabit.key === 'NEW';
@@ -19,22 +18,22 @@ const ActionButton = ({
     if (habit) {
       let messageText;
       const newHabit = { ...habit, key: habit.id };
-      const newData = [...habitList];
+      const newData = [...habits];
       // Get index of habit being saved and check if it exists
       const index = newData.findIndex((record) => newHabit.id === record.id);
 
       if (index > -1) {
         newData[index] = newHabit;
-        messageText = 'updated!';
+        messageText = 'UPDATED!';
       } else {
         // Remove editing row and add habit
         const indexLastRow = newData.length - 1;
         newData[indexLastRow] = newHabit;
-        messageText = 'saved!';
+        messageText = 'SAVED!';
       }
       // Update state of parent component
       revertEdits();
-      setHabitList(newData);
+      setHabits(newData);
       message.success(`${habit.title} ${messageText}`);
     }
   };
@@ -55,7 +54,7 @@ const ActionButton = ({
 
   const addHabit = () => {
     const newHabit = createNewHabit();
-    setHabitList([...habitList, newHabit]);
+    setHabits([...habits, newHabit]);
   };
 
   const newHabitData = {
@@ -71,19 +70,19 @@ const ActionButton = ({
     };
 
     return (
-      <Button id="action-button" type="primary" size="large" loading={createLoading} onClick={() => createHabit(newHabitData)}>
+      <Button style={{ width: '100%', height: '100%' }} type="primary" loading={createLoading} onClick={() => createHabit(newHabitData)}>
         SAVE HABIT
       </Button>
     );
   } if (editingMode) {
     return (
-      <Button id="action-button" type="primary" size="large" loading={updateLoading} onClick={() => updateHabit(newHabitData)}>
+      <Button style={{ width: '100%', height: '100%' }} type="primary" loading={updateLoading} onClick={() => updateHabit(newHabitData)}>
         SAVE CHANGES
       </Button>
     );
   }
   return (
-    <Button id="action-button" type="default" size="large" onClick={() => addHabit()}>
+    <Button style={{ width: '100%', height: '100%' }} type="default" onClick={() => addHabit()}>
       ADD HABIT
     </Button>
   );

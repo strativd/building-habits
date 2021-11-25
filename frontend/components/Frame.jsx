@@ -2,11 +2,25 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
 
-import useUser from '../lib/useUser';
+import useUser from './useUser';
 import Logout from './Logout';
 
 const { Footer, Header, Content } = Layout;
+
+const Logo = styled.div`
+    float: left;
+    width: 100px;
+    height: 100%;
+    text-align: center;
+`;
+
+const LogoImage = styled.img`
+      width: auto;
+      height: 100%;
+      vertical-align: top;
+`;
 
 const Frame = ({ children }) => {
   const user = useUser();
@@ -15,9 +29,9 @@ const Frame = ({ children }) => {
   return (
     <Layout>
       <Header className="site-header">
-        <div className="logo">
-          <img className="logo__image" title="haBits logo" alt="haBits logo" src="/static/habits_small.png" />
-        </div>
+        <Logo>
+          <LogoImage className="logo__image" title="haBits logo" alt="haBits logo" src="/static/habits_small.png" />
+        </Logo>
         <Menu theme="dark" mode="horizontal" selectedKeys={[router.pathname]}>
           <Menu.Item key="/">
             <Link href="/">HABITS</Link>

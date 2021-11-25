@@ -4,6 +4,7 @@ import { ApolloProvider } from '@apollo/client';
 import Frame from '../components/Frame';
 import { withData } from '../lib';
 
+import '../components/styles/normalize.css';
 import '../components/styles/antd.css';
 import '../components/styles/App.scss';
 

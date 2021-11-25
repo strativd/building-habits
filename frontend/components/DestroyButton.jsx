@@ -2,29 +2,35 @@ import React from 'react';
 import { message, Popconfirm } from 'antd';
 import { CloseCircleFilled, QuestionCircleOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
+import styled from 'styled-components';
 
-import { useHabitEditor } from './useHabitEditor';
+import { useHabits } from './useHabits';
 import { DELETE_HABIT } from './graphql';
 import { errorMessages } from '../lib';
 
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
 const DestroyButton = ({
-  habitRecord,
-  habitList,
-  setHabitList,
+  habit,
 }) => {
   const {
-    originalHabit, editing, revertEdits,
-  } = useHabitEditor();
+    habits, setHabits, originalHabit, editing, revertEdits,
+  } = useHabits();
 
-  const deleteHabit = (habit) => {
-    if (habit) {
-      const newData = [...habitList];
-      const index = newData.findIndex((row) => row.id === habit.id);
+  const deleteHabit = (habitData) => {
+    if (habitData) {
+      const newData = [...habits];
+      const index = newData.findIndex((row) => row.id === habitData.id);
 
       newData.splice(index, 1);
-      setHabitList(newData);
+      setHabits(newData);
       revertEdits();
-      message.success(`Deleted ${habit.title}`);
+      message.success(`DELETED ${habitData.title}`);
     }
   };
 
@@ -33,8 +39,8 @@ const DestroyButton = ({
     onCompleted: (data) => deleteHabit(data.deleteHabit),
   });
 
-  const revertHabit = (habit) => {
-    const newData = [...habitList];
+  const revertHabit = () => {
+    const newData = [...habits];
     const isNewHabit = habit.key === 'NEW';
 
     if (isNewHabit) {
@@ -44,34 +50,38 @@ const DestroyButton = ({
       newData[index] = originalHabit; // revert habit data
     }
 
-    setHabitList(newData);
+    setHabits(newData);
     setTimeout(() => {
       // wait for PopConfirm animation to finish
       revertEdits({});
     }, 300);
   };
 
-  return editing(habitRecord) ? (
-    <Popconfirm
-      title="Undo changes?"
-      cancelText="Nope"
-      okText="Undo!"
-      icon={<QuestionCircleOutlined />}
-      onConfirm={() => revertHabit(habitRecord)}
-    >
-      <CloseCircleFilled />
-    </Popconfirm>
-  ) : (
-    <Popconfirm
-      title="Delete habit?"
-      cancelText="Nope"
-      okText="Delete!"
-      okButtonProps={{ danger: true }}
-      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-      onConfirm={() => deleteHabitMutation({ variables: { id: habitRecord.id } })}
-    >
-      <CloseCircleFilled />
-    </Popconfirm>
+  return (
+    <IconWrapper className="DestroyButton">
+      {editing(habit) ? (
+        <Popconfirm
+          title="UNDO CHANGES?"
+          cancelText="NO"
+          okText="UNDO"
+          icon={<QuestionCircleOutlined />}
+          onConfirm={() => revertHabit()}
+        >
+          <CloseCircleFilled />
+        </Popconfirm>
+      ) : (
+        <Popconfirm
+          title="DELETE HABIT?"
+          cancelText="NO"
+          okText="DELETE"
+          okButtonProps={{ danger: true }}
+          icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+          onConfirm={() => deleteHabitMutation({ variables: { id: habit.id } })}
+        >
+          <CloseCircleFilled />
+        </Popconfirm>
+      )}
+    </IconWrapper>
   );
 };
 

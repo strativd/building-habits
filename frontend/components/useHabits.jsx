@@ -9,6 +9,7 @@ function HabitContextProvider({ children }) {
    * in here and anyone can access it via the consumer 🎉
    */
 
+  const [habits, setHabits] = useState([]);
   const [editingHabit, setEditingHabit] = useState({});
   const [originalHabit, setOriginalHabit] = useState({});
 
@@ -24,7 +25,7 @@ function HabitContextProvider({ children }) {
     setEditingHabit(habitData);
   };
 
-  const editing = (habit) => habit.key === editingHabit.key;
+  const editing = (habit) => habit?.key === editingHabit?.key;
 
   const createNewHabit = () => {
     const habit = {
@@ -52,8 +53,10 @@ function HabitContextProvider({ children }) {
   return (
     <HabitProvider
       value={{
+        habits,
         editingHabit,
         originalHabit,
+        setHabits,
         startEditing,
         editHabit,
         editing,
@@ -67,11 +70,11 @@ function HabitContextProvider({ children }) {
 }
 
 // make a custom hook for accessing the habit local state
-function useHabitEditor() {
+function useHabits() {
   // we use a consumer here to access the local state in our hook
   const habitContext = useContext(HabitContext);
 
   return habitContext;
 }
 
-export { HabitContextProvider, useHabitEditor };
+export { HabitContextProvider, useHabits };

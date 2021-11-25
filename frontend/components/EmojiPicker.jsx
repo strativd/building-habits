@@ -7,10 +7,19 @@ import React, { useState, createContext } from 'react';
 import { Picker } from 'emoji-mart';
 import { Modal, message } from 'antd';
 import { useMutation } from '@apollo/client';
+import styled from 'styled-components';
 
-import { useHabitEditor } from './useHabitEditor';
+import { useHabits } from './useHabits';
 import { UPDATE_EMOJI } from './graphql';
 import { errorMessages } from '../lib';
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  justify-content: center;
+  cursor: pointer;
+`;
 
 const hideButtonProps = {
   style: {
@@ -18,17 +27,15 @@ const hideButtonProps = {
   },
 };
 
-const IconPicker = ({
-  habitRecord,
-}) => {
+const IconPicker = ({ habit }) => {
   const HabitContext = createContext();
-  const { editing } = useHabitEditor();
+  const { editing } = useHabits();
 
   const [modal, contextHolder] = Modal.useModal();
 
   const [emoji, setEmoji] = useState({
-    native: habitRecord.emoji.native,
-    name: habitRecord.emoji.name,
+    native: habit.emoji.native,
+    name: habit.emoji.name,
   });
 
   const [updateHabitEmoji] = useMutation(UPDATE_EMOJI);
@@ -38,14 +45,14 @@ const IconPicker = ({
       variables: {
         ...pickerData,
         emojiId: pickerData.id,
-        id: habitRecord.emoji.id,
+        id: habit.emoji.id,
       },
     };
 
     try {
       const { data } = await updateHabitEmoji(newEmojiData);
       const { name, native } = data.updateEmoji;
-      message.success(`Saved ${native} for ${habitRecord.title}!`);
+      message.success(`Saved ${native} for ${habit.title}!`);
       setEmoji({
         native,
         name,
@@ -57,7 +64,7 @@ const IconPicker = ({
 
   const content = (
     <HabitContext.Consumer>
-      {(habit) => (
+      {() => (
         <Picker
           theme="dark"
           color="#75B748"
@@ -84,16 +91,16 @@ const IconPicker = ({
   };
 
   const showIconPicker = () => {
-    if (!editing(habitRecord)) modal.info(modalConfig);
+    if (!editing(habit)) modal.info(modalConfig);
   };
 
   const renderIcon = <span role="img" aria-label={emoji.name}>{emoji.native}</span>;
 
   const renderIconPicker = (
-    <HabitContext.Provider value={habitRecord}>
-      <div onClick={showIconPicker}>
+    <HabitContext.Provider value={habit}>
+      <IconWrapper onClick={showIconPicker}>
         {renderIcon}
-      </div>
+      </IconWrapper>
       {contextHolder}
     </HabitContext.Provider>
   );
