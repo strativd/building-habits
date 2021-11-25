@@ -97,7 +97,7 @@ export const Habit = list({
         addValidationError(`Goal must be less than 10`);
       }
     },
-    afterDelete: async ({ context, existingItem }) => {
+    beforeDelete: async ({ context, existingItem }) => {
       // Delete emoji from db
       const emojiId = String(existingItem.emoji);
       await context.lists.Emoji.deleteOne({ id: emojiId });
