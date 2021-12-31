@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "keystone-next",
     "build": "keystone-next build",
-    "start": "keystone-next build && keystone-next start -p $PORT",
+    "start": "keystone-next start -p $PORT",
     "seed-data": "keystone-next --seed-data",
     "publishToHeroku": "cd ../ && git push heroku-backend `git subtree split --prefix backend main`:main",
     "// what? //": "from root of local git, push to 'heroku-backend/main' (remote) from 'backend' sub-directory"
