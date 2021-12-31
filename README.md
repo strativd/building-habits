@@ -10,7 +10,8 @@
 
 A personal web project to practice React + Next.js + GraphQL + Keystone JS, and good habits...
 
-<img alt="haBits habit tracking screenshot" width="100%" src="/assets/habits_tracker_screenshot.png">
+https://user-images.githubusercontent.com/25858762/147840182-b37616d5-327e-4dff-97f0-ca6768f71d8c.mov
+
 
 ## Getting started
 
